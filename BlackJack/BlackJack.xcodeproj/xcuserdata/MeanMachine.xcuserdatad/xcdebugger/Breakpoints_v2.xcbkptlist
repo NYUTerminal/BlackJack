@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BlackJack/ViewController.swift"
-            timestampString = "445848039.148155"
+            timestampString = "445866332.015942"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
+            startingLineNumber = "172"
+            endingLineNumber = "172"
             landmarkName = "getCardFromDeckAndRemove()"
             landmarkType = "5">
          </BreakpointContent>

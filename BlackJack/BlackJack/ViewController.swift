@@ -48,6 +48,9 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var balanceOnView: UITextField!
     
+    @IBOutlet weak var noOfTimesOnView: UITextField!
+    
+    
     var dealerCards = Array<Int>()
     
     var playerCards = Array<Int>()
@@ -69,6 +72,8 @@ class ViewController: UIViewController {
     var isPlayerWon = false
     
     var numberOfGamesPlayed = 0
+    
+    var dealerCardsSum = 0
     //Function to initialize the deck
     
     func initializeDeck() {
@@ -145,6 +150,14 @@ class ViewController: UIViewController {
         
     }
     
+    func getSumOfCards(cardsInHand : Array<Int>) -> Int{
+        var tempCount = 0
+        for card in cardsInHand {
+            tempCount += card
+        }
+        return tempCount
+    }
+    
     
     func isGreater(bet: Int) -> Bool {
         if bet > 1 && bet < balance{
@@ -155,43 +168,70 @@ class ViewController: UIViewController {
     
     func getCardFromDeckAndRemove()-> Int
     {
-        var currentCardValue :Int = getCardValue("\(shuffledDeck[0])").0
-        shuffledDeck.removeAtIndex(0)
-        return currentCardValue
+        if(shuffledDeck.count>0){
+            var currentCardValue :Int = getCardValue("\(shuffledDeck[0])").0
+            shuffledDeck.removeAtIndex(0)
+            return currentCardValue
+        }
+        return 0
     }
 
 
     @IBAction func start() {
         
-        if betOnView.text == nil {
+        if betOnView == nil {
             println("Bet is empty . Please input some bet to proceed ")
             return
         }
         
-        if isGreater( betOnView.text.toInt()!) == false
+        if isGreater( betOnView.text.toInt()! ) == false
         {
             println("You cant play")
             return
         }
+        
+        
+        
+        /*
+            After Every 5 times need to shuffle the deck . 
+            Number of times played should be multiple of 5.
+        */
         initializeDeck()
+        if numberOfGamesPlayed%5 == 0 {
+            shuffledDeck = shuffledDeck.shuffled()
+        }
+        
+        //This block wont execute .
+        if  shuffledDeck.count == 0 {
+            println("No more cards left in the deck to play . Please reset the game . Launch the app again for now . ")
+            return
+        }
         dealerCards.append(getCardFromDeckAndRemove())
         dealerCards.append(getCardFromDeckAndRemove())
         playerCards.append(getCardFromDeckAndRemove())
         playerCards.append(getCardFromDeckAndRemove())
-        println(playerCards)
-        println(dealerCards)
+        println("playerCards - \(playerCards)")
+        println("dealerCards - \(dealerCards)")
         displayPlayerCardsOnView()
         displayDealerCardsOnViewWithFlip()
+        displayNoOfTimesPlayed()
         displayBalance()
+        bet = betOnView.text.toInt()!
         numberOfGamesPlayed++
+        
         if isBlackJack(playerCards) == true
         {
-            
+            makeBillingChanges(true)
+            displayBalance()
+            resetCardsTotalAndBetOnView()
             println("Player Won")
             return
         }
         if isBusted(playerCards) == true
         {
+            makeBillingChanges(false)
+            displayBalance()
+            resetCardsTotalAndBetOnView()
             println("Player lost")
             return
         }
@@ -201,11 +241,139 @@ class ViewController: UIViewController {
     @IBAction func splitCards() {
     }
     
+    
+    //Player will loose money two times .
+    
     @IBAction func double() {
+        playerCards.append(getCardFromDeckAndRemove())
+        displayPlayerCardsOnView()
+        println("playerCards - \(playerCards)")
+        println("dealerCards - \(dealerCards)")
+        if isBlackJack(playerCards) == true
+        {
+            makeBillingChanges(true)
+            makeBillingChanges(true)
+            displayBalance()
+            resetCardsTotalAndBetOnView()
+            println("Player Won")
+            return
+        }
+        
+        if isBusted(playerCards) == true
+        {
+            makeBillingChanges(false)
+            makeBillingChanges(false)
+            displayBalance()
+            resetCardsTotalAndBetOnView()
+            println("Player lost")
+            return
+        }
+        stand()
+        
+        
     }
+  
+    @IBAction func hit() {
+        
+        if standFlag == false {
+            
+        playerCards.append(getCardFromDeckAndRemove())
+            println("playerCards - \(playerCards)")
+            println("dealerCards - \(dealerCards)")
+            displayPlayerCardsOnView()
+            displayDealerCardsOnViewWithFlip()
+            if isBlackJack(playerCards) == true
+            {
+                playerWon()
+                return
+            }
+        
+            if isBusted(playerCards) == true
+            {
+                playerLost()
+                return
+            }
+        }else{
+            println("Cant hit , STAND is on")
+            return
+        }
+        
+    }
+
+    @IBAction func stand() {
+        standFlag = true
+        //dealer cards we have to populate .
+        dealerCardsSum = getSumOfCards(dealerCards)
+        while(dealerCardsSum<16){
+            var currentCardForDealer = getCardFromDeckAndRemove()
+            dealerCards.append(currentCardForDealer)
+            dealerCardsSum += currentCardForDealer
+        }
+        println("dealer Card sum after stand \(dealerCardsSum)")
+        println("dealer Cards \(dealerCards)")
+        if(dealerCardsSum>21){
+            println("player won !! while dealter is trying to get above 16")
+            playerWon()
+            return
+        }
+        
+        if(dealerCardsSum > playerCardsTotalSum){
+            println("dealer sum \(dealerCardsSum) > player sum \(playerCardsTotalSum)")
+            playerLost()
+        }else if dealerCardsSum < playerCardsTotalSum{
+            println("dealer sum \(dealerCardsSum) < player sum \(playerCardsTotalSum)")
+            playerWon()
+        }else{
+            println("dealer sum \(dealerCardsSum) == player sum \(playerCardsTotalSum)")
+            resetCardsTotalAndBetOnView()
+        }
+        
+    }
+
+    func playerWon(){
+        makeBillingChanges(true)
+        displayBalance()
+        resetCardsTotalAndBetOnView()
+        println("Player Won")
+    }
+    
+    func playerLost(){
+        makeBillingChanges(false)
+        displayBalance()
+        resetCardsTotalAndBetOnView()
+        println("Player lost")
+
+    }
+    
+    func resetCardsTotalAndBetOnView(){
+        playerCardsOnView.text = ""
+        dealerCardsOnView.text = ""
+        playerTotalOnView.text = ""
+        dealerTotalOnView.text = ""
+        betOnView.text = ""
+        dealerCardsSum = 0
+        playerCardsTotalSum = 0
+        playerCards = []
+        dealerCards = []
+        standFlag = false
+    }
+    
+    func makeBillingChanges(isPlayerWon : Bool ) {
+        if isPlayerWon {
+            balance = balance + bet
+            println("new balance of player(won) - \(balance)")
+            println("bet - \(bet)")
+        }else{
+            println("new balance of player(lost) - \(balance)")
+            println("bet - \(bet)")
+            balance = balance - bet
+        }
+    }
+    
     
     func displayPlayerCardsOnView() {
         playerCardsOnView.text = ""
+        playerTotalOnView.text = ""
         var tempTotal = 0
         for pc in playerCards {
             tempTotal += pc
@@ -228,63 +396,13 @@ class ViewController: UIViewController {
     }
     
     func displayBalance() {
+        balanceOnView.text = ""
         balanceOnView.text = balanceOnView.text! + "\(balance)"
     }
-  
-  
-    @IBAction func hit() {
-        
-        if standFlag == false {
-            
-        playerCards.append(getCardFromDeckAndRemove())
-            displayPlayerCardsOnView()
-            displayDealerCardsOnViewWithFlip()
-            if isBlackJack(playerCards) == true
-            {
-                makeBillingChanges(true)
-                displayBalance()
-                println("Player Won")
-                return
-            }
-        
-            if isBusted(playerCards) == true
-            {
-                makeBillingChanges(false)
-                displayBalance()
-                println("Player lost")
-                return
-            }
-        }else{
-            println("Cant hit , STAND is on")
-            return
-        }
-        
-    }
-
-    @IBAction func stand() {
-        standFlag = true
-        //dealer cards we have to populate .
-        
-        
-        
-        
-        
-        
-    }
     
-    func resetCardsTotalAndBetOnView(){
-        playerCardsOnView.text = ""
-        dealerCardsOnView.text = ""
-        betOnView.text = ""
-        
-    }
-    
-    func makeBillingChanges(isPlayerWon : Bool ) {
-        if isPlayerWon {
-            balance = balance + bet
-        }else{
-            balance = balance - bet
-        }
+    func displayNoOfTimesPlayed() {
+        noOfTimesOnView.text = ""
+        noOfTimesOnView.text = noOfTimesOnView.text! + "\(numberOfGamesPlayed)"
     }
     
 }
