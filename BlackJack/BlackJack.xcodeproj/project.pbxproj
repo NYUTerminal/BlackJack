@@ -77,6 +77,9 @@
 		CB35699E1A8FF55B00B9961B /* BlackJack */ = {
 			isa = PBXGroup;
 			children = (
+				CB3569A81A8FF55B00B9961B /* Images.xcassets */,
+				CB3569A11A8FF55B00B9961B /* AppDelegate.swift */,
+				CB3569AA1A8FF55B00B9961B /* LaunchScreen.xib */,
 				CB3569A31A8FF55B00B9961B /* ViewController.swift */,
 				CB3569A51A8FF55B00B9961B /* Main.storyboard */,
 				CB35699F1A8FF55B00B9961B /* Supporting Files */,
@@ -87,9 +90,6 @@
 		CB35699F1A8FF55B00B9961B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				CB3569A81A8FF55B00B9961B /* Images.xcassets */,
-				CB3569AA1A8FF55B00B9961B /* LaunchScreen.xib */,
-				CB3569A11A8FF55B00B9961B /* AppDelegate.swift */,
 				CB3569A01A8FF55B00B9961B /* Info.plist */,
 			);
 			name = "Supporting Files";

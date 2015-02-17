@@ -90,4 +90,6 @@ func blackJack() {
     
 }
 
+var dealerCards: [String] = ["\(mixedUp[0])","\(mixedUp[1])"]
+
 
