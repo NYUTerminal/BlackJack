@@ -13,15 +13,12 @@ every time needs to click on start to play .
 After start analyze the cards to check blackJack or any combination
 one global variable to store deck
 options to insurance
-option to double
-option to
-
 */
 
 
 import UIKit
 
-//Referenced from google . How to shuffle an array
+//Referenced from google . How to shuffle an array by extending the inbuilt Array .
 extension Array {
     func shuffled() -> [T] {
         var list = self
@@ -76,107 +73,40 @@ class ViewController: UIViewController {
     var dealerCardsSum = 0
     //Function to initialize the deck
     
-    func initializeDeck() {
-        var Suit = ["Spades","Hearts","Diamonds" , "Clubs"]
-        var Card = ["Ace","2","3","4","5","6","7","8","9","10","Jack","Queen","King"]
-        var deck : [String] = []
-        for suit in Suit
-        {
-            for card in Card {
-                deck.append("\(card):\(suit)")
-            }
-        }
-        shuffledDeck = deck.shuffled()
-    }
+    var imageView:UIImageView = UIImageView()
+    var backgroundDict:Dictionary<String, String> = Dictionary()
     
-    func getCardValue(card : String) -> ( Int , Int ) {
-        var card_types = split( card, {$0 == ":"})
-        switch card_types[0]
-        {
-        case "2":
-            return ( 2 , 0)
-        case "3":
-            return ( 3 , 0)
-        case "4":
-            return ( 4 , 0)
-        case "5":
-            return ( 5 , 0)
-        case "6":
-            return ( 6 , 0)
-        case "7":
-            return ( 7 , 0)
-        case "8":
-            return ( 8 ,  0)
-        case "9":
-            return ( 9 , 0)
-        case "10":
-            return ( 10 , 0)
-        case "Jack":
-            return ( 10 , 0)
-        case "Queen":
-            return ( 10 , 0)
-        case "King":
-            return ( 10 , 0)
-        case "Ace":
-            return ( 11 , 11)
-        default :
-            return (0 , 0 )
-        }
-        
-    }
-
+    /*
+    Tried to set back ground image , Work is in progress..
     
-    func isBlackJack(cardsInHand : Array<Int>) -> Bool {
-        var tempCount = 0
-        for eachCard in cardsInHand {
-            tempCount += eachCard
-        }
-        if tempCount == 21 {
-            return true
-        }
-        playerCardsTotalSum = tempCount
-        return false
-    }
+    */
     
-    func isBusted(cardsInHand :Array<Int>) -> Bool {
-        var tempCount = 0
-        for eachCard in cardsInHand {
-            tempCount += eachCard
-        }
-        if tempCount > 21 {
-            return true
-        }
-        return false
-        
-    }
-    
-    func getSumOfCards(cardsInHand : Array<Int>) -> Int{
-        var tempCount = 0
-        for card in cardsInHand {
-            tempCount += card
-        }
-        return tempCount
-    }
+    //    override func viewDidLoad() {
+    //        super.viewDidLoad()
+    //
+    //        let width:CGFloat = 1334;
+    //        let height:CGFloat = 750
+    //
+    //        var view:UIView = UIView(frame: CGRectMake(0, 0, width, height));
+    //
+    //        self.view.addSubview(view)
+    //
+    //        imageView = UIImageView(frame: view.frame);
+    //
+    //        imageView.image = UIImage(named: "test.jpg")
+    //
+    //        view.addSubview(imageView);
+    //
+    //    }
     
     
-    func isGreater(bet: Int) -> Bool {
-        if bet > 1 && bet < balance{
-            return true
-        }
-            return false
-    }
+    /*
+    - Start is responsible for starting the game and initializing the game .
+    - Check initial conditions like did player bet ? or did player got a BlackJack in the beginning.
+    - Maintains Basic no of times player played the game etc .
     
-    func getCardFromDeckAndRemove()-> Int
-    {
-        if(shuffledDeck.count>0){
-            var currentCardValue :Int = getCardValue("\(shuffledDeck[0])").0
-            shuffledDeck.removeAtIndex(0)
-            return currentCardValue
-        }
-        return 0
-    }
-
-
+    */
+    
     @IBAction func start() {
         
         if betOnView == nil {
@@ -193,8 +123,8 @@ class ViewController: UIViewController {
         
         
         /*
-            After Every 5 times need to shuffle the deck . 
-            Number of times played should be multiple of 5.
+        After Every 5 times need to shuffle the deck .
+        Number of times played should be multiple of 5.
         */
         initializeDeck()
         if numberOfGamesPlayed%5 == 0 {
@@ -235,15 +165,24 @@ class ViewController: UIViewController {
             println("Player lost")
             return
         }
-
+        
     }
     
+    
+    
+    /*
+    - Incase of player has same number of cards then he can split the cards and play for each hand .
+    */
     @IBAction func splitCards() {
     }
     
     
-    //Player will loose money two times .
+    /*
+    - Double scneario .
+    - Billing changes happens twice in this scenario . Not an effective way of implementation . Will be improving in Assignment 2.
+    - More generalized methonds are going to come.
     
+    */
     @IBAction func double() {
         playerCards.append(getCardFromDeckAndRemove())
         displayPlayerCardsOnView()
@@ -272,12 +211,18 @@ class ViewController: UIViewController {
         
         
     }
-  
+    
+    /*
+    - Hit Scenario - To give player cards till he says Stay.
+    - Make some Billing changes incase of player won or loose scenarios .
+    
+    */
+    
     @IBAction func hit() {
         
         if standFlag == false {
             
-        playerCards.append(getCardFromDeckAndRemove())
+            playerCards.append(getCardFromDeckAndRemove())
             println("playerCards - \(playerCards)")
             println("dealerCards - \(dealerCards)")
             displayPlayerCardsOnView()
@@ -287,7 +232,7 @@ class ViewController: UIViewController {
                 playerWon()
                 return
             }
-        
+            
             if isBusted(playerCards) == true
             {
                 playerLost()
@@ -299,7 +244,12 @@ class ViewController: UIViewController {
         }
         
     }
-
+    
+    /*
+    - Stand is when player says not going to take any cards from deck and let dealer play .
+    
+    */
+    
     @IBAction func stand() {
         standFlag = true
         //dealer cards we have to populate .
@@ -329,7 +279,7 @@ class ViewController: UIViewController {
         }
         
     }
-
+    
     func playerWon(){
         makeBillingChanges(true)
         displayBalance()
@@ -342,8 +292,29 @@ class ViewController: UIViewController {
         displayBalance()
         resetCardsTotalAndBetOnView()
         println("Player lost")
-
+        
     }
+    
+    
+    /*
+    - Change Balance based on the match result .
+    
+    */
+    func makeBillingChanges(isPlayerWon : Bool ) {
+        if isPlayerWon {
+            balance = balance + bet
+            println("new balance of player(won) - \(balance)")
+            println("bet - \(bet)")
+        }else{
+            println("new balance of player(lost) - \(balance)")
+            println("bet - \(bet)")
+            balance = balance - bet
+        }
+    }
+    /*
+    resetCardsTotalAndBetOnView , displayPlayerCardsOnView , displayDealerCardsOnViewWithFlip
+    methods to change
+    */
     
     func resetCardsTotalAndBetOnView(){
         playerCardsOnView.text = ""
@@ -358,17 +329,6 @@ class ViewController: UIViewController {
         standFlag = false
     }
     
-    func makeBillingChanges(isPlayerWon : Bool ) {
-        if isPlayerWon {
-            balance = balance + bet
-            println("new balance of player(won) - \(balance)")
-            println("bet - \(bet)")
-        }else{
-            println("new balance of player(lost) - \(balance)")
-            println("bet - \(bet)")
-            balance = balance - bet
-        }
-    }
     
     
     func displayPlayerCardsOnView() {
@@ -403,6 +363,108 @@ class ViewController: UIViewController {
     func displayNoOfTimesPlayed() {
         noOfTimesOnView.text = ""
         noOfTimesOnView.text = noOfTimesOnView.text! + "\(numberOfGamesPlayed)"
+    }
+    func initializeDeck() {
+        var Suit = ["Spades","Hearts","Diamonds" , "Clubs"]
+        var Card = ["Ace","2","3","4","5","6","7","8","9","10","Jack","Queen","King"]
+        var deck : [String] = []
+        for suit in Suit
+        {
+            for card in Card {
+                deck.append("\(card):\(suit)")
+            }
+        }
+        shuffledDeck = deck.shuffled()
+    }
+    
+    /*
+    - CardValue returns two varibales , As ace can be 1 or 11 . For not lets consider Ace is 11
+    */
+    func getCardValue(card : String) -> ( Int , Int ) {
+        var card_types = split( card, {$0 == ":"})
+        switch card_types[0]
+        {
+        case "2":
+            return ( 2 , 0)
+        case "3":
+            return ( 3 , 0)
+        case "4":
+            return ( 4 , 0)
+        case "5":
+            return ( 5 , 0)
+        case "6":
+            return ( 6 , 0)
+        case "7":
+            return ( 7 , 0)
+        case "8":
+            return ( 8 ,  0)
+        case "9":
+            return ( 9 , 0)
+        case "10":
+            return ( 10 , 0)
+        case "Jack":
+            return ( 10 , 0)
+        case "Queen":
+            return ( 10 , 0)
+        case "King":
+            return ( 10 , 0)
+        case "Ace":
+            return ( 11 , 11)
+        default :
+            return (0 , 0 )
+        }
+        
+    }
+    
+    
+    func isBlackJack(cardsInHand : Array<Int>) -> Bool {
+        var tempCount = 0
+        for eachCard in cardsInHand {
+            tempCount += eachCard
+        }
+        if tempCount == 21 {
+            return true
+        }
+        playerCardsTotalSum = tempCount
+        return false
+    }
+    
+    func isBusted(cardsInHand :Array<Int>) -> Bool {
+        var tempCount = 0
+        for eachCard in cardsInHand {
+            tempCount += eachCard
+        }
+        if tempCount > 21 {
+            return true
+        }
+        return false
+        
+    }
+    
+    func getSumOfCards(cardsInHand : Array<Int>) -> Int{
+        var tempCount = 0
+        for card in cardsInHand {
+            tempCount += card
+        }
+        return tempCount
+    }
+    
+    
+    func isGreater(bet: Int) -> Bool {
+        if bet > 1 && bet < balance{
+            return true
+        }
+        return false
+    }
+    
+    func getCardFromDeckAndRemove()-> Int
+    {
+        if(shuffledDeck.count>0){
+            var currentCardValue :Int = getCardValue("\(shuffledDeck[0])").0
+            shuffledDeck.removeAtIndex(0)
+            return currentCardValue
+        }
+        return 0
     }
     
 }
