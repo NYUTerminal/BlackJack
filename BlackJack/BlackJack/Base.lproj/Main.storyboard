@@ -157,6 +157,12 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Game is going on .. " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FfK-94-yl9">
+                                <rect key="frame" x="27" y="443" width="155" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.052612293644492644" green="0.54507645511358493" blue="0.54884785353535359" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="tintColor" red="0.5" green="0.0" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
@@ -176,6 +182,7 @@
                         <outlet property="betOnView" destination="r4h-8v-Rhi" id="wZf-fx-fMG"/>
                         <outlet property="dealerCardsOnView" destination="GwF-e0-KfC" id="hY0-R1-hNN"/>
                         <outlet property="dealerTotalOnView" destination="Giz-OF-WW8" id="OgT-6o-eHQ"/>
+                        <outlet property="gameState" destination="FfK-94-yl9" id="b4z-aa-CQq"/>
                         <outlet property="noOfTimesOnView" destination="FZ4-QV-9QF" id="Znb-zZ-obJ"/>
                         <outlet property="playerCardsOnView" destination="a8U-UC-sV0" id="dgr-qj-6Jc"/>
                         <outlet property="playerTotalOnView" destination="gnZ-v5-t98" id="53u-ns-Xhn"/>

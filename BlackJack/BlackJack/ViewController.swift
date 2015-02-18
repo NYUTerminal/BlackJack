@@ -47,6 +47,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var noOfTimesOnView: UITextField!
     
+    @IBOutlet weak var gameState: UILabel!
     
     var dealerCards = Array<Int>()
     
@@ -109,7 +110,8 @@ class ViewController: UIViewController {
     
     @IBAction func start() {
         
-        if betOnView == nil {
+        if betOnView.text == nil ||  betOnView.text == "" {
+            gameState.text = "Bet is empty . Please input bet !!"
             println("Bet is empty . Please input some bet to proceed ")
             return
         }
@@ -154,6 +156,7 @@ class ViewController: UIViewController {
             makeBillingChanges(true)
             displayBalance()
             resetCardsTotalAndBetOnView()
+            gameState.text = "Player Won !!"
             println("Player Won")
             return
         }
@@ -162,6 +165,7 @@ class ViewController: UIViewController {
             makeBillingChanges(false)
             displayBalance()
             resetCardsTotalAndBetOnView()
+            gameState.text = "Player Lost !!"
             println("Player lost")
             return
         }
@@ -194,6 +198,7 @@ class ViewController: UIViewController {
             makeBillingChanges(true)
             displayBalance()
             resetCardsTotalAndBetOnView()
+            gameState.text = "Player Won !!"
             println("Player Won")
             return
         }
@@ -204,6 +209,7 @@ class ViewController: UIViewController {
             makeBillingChanges(false)
             displayBalance()
             resetCardsTotalAndBetOnView()
+            gameState.text = "Player Lost !!"
             println("Player lost")
             return
         }
@@ -262,6 +268,7 @@ class ViewController: UIViewController {
         println("dealer Card sum after stand \(dealerCardsSum)")
         println("dealer Cards \(dealerCards)")
         if(dealerCardsSum>21){
+            gameState.text = "Player Won !!"
             println("player won !! while dealter is trying to get above 16")
             playerWon()
             return
@@ -284,6 +291,7 @@ class ViewController: UIViewController {
         makeBillingChanges(true)
         displayBalance()
         resetCardsTotalAndBetOnView()
+        gameState.text = "Player Won !!"
         println("Player Won")
     }
     
@@ -291,6 +299,7 @@ class ViewController: UIViewController {
         makeBillingChanges(false)
         displayBalance()
         resetCardsTotalAndBetOnView()
+        gameState.text = "Player Lost !!"
         println("Player lost")
         
     }
@@ -303,9 +312,11 @@ class ViewController: UIViewController {
     func makeBillingChanges(isPlayerWon : Bool ) {
         if isPlayerWon {
             balance = balance + bet
+            gameState.text = "Player Won !!"
             println("new balance of player(won) - \(balance)")
             println("bet - \(bet)")
         }else{
+            gameState.text = "Player Lost !!"
             println("new balance of player(lost) - \(balance)")
             println("bet - \(bet)")
             balance = balance - bet
